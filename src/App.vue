@@ -1,6 +1,6 @@
 <template>
     <Navbar />
-    <Quiz />
+    <RouterView />
     <span class="footer"
         >© 2024 Powered by
         <a href="https://molina.digital" target="_blank">molina.digital</a> and
@@ -11,7 +11,6 @@
 </template>
 
 <script setup>
-import Quiz from './views/Quiz.vue'
 import Navbar from './components/Navbar.vue'
 </script>
 

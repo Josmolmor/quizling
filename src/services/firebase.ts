@@ -15,20 +15,15 @@ import {
     collection,
 } from 'firebase/firestore'
 
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
-
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-    apiKey: 'AIzaSyBOmm_89pREU3CGtr204IKZpgg1JFZXk6s',
-    authDomain: 'websocket-lobby-42264.firebaseapp.com',
-    databaseURL: 'https://websocket-lobby-42264-default-rtdb.firebaseio.com',
-    projectId: 'websocket-lobby-42264',
-    storageBucket: 'websocket-lobby-42264.appspot.com',
-    messagingSenderId: '8578146585',
-    appId: '1:8578146585:web:36f5ec5c2349ba743e2588',
-    measurementId: 'G-SWM519SBJ4',
+    apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+    authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+    databaseURL: import.meta.env.VITE_FIREBASE_DATABASE_URL,
+    projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+    storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+    messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+    appId: import.meta.env.VITE_FIREBASE_APP_ID,
+    measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID,
 }
 
 // Initialize Firebase

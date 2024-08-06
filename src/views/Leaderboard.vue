@@ -56,3 +56,39 @@ onMounted(() => {
     fetchLeaderboard()
 })
 </script>
+
+<style lang="scss" scoped>
+.leaderboard-container {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    justify-content: center;
+    align-items: center;
+
+    h2 {
+        margin: 0 auto 24px;
+    }
+
+    ul {
+        padding: 0;
+        margin: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+
+        .leaderboard-entry {
+            text-align: left;
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+
+            > span:first-child {
+                text-transform: uppercase;
+                font-size: 12px;
+                font-weight: bold;
+                opacity: 0.5;
+            }
+        }
+    }
+}
+</style>
