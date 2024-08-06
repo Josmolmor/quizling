@@ -215,7 +215,7 @@ const submitAnswer = (answer: string) => {
     } else {
       isFinished.value = true;
     }
-  }, 2500); // Feedback duration
+  }, 2250); // Feedback duration
 };
 
 const submitScore = async () => {
@@ -347,7 +347,6 @@ onMounted(() => {
 }
 
 .question-container {
-  // margin-bottom: 60px;
 
   .extra-info {
     display: flex;
@@ -355,6 +354,14 @@ onMounted(() => {
     justify-content: flex-start;
     flex-wrap: wrap;
     flex-direction: column;
+
+    > div {
+      text-align: left;
+      display: flex;
+      align-items: baseline;
+      justify-content: flex-start;
+      gap: 4px;
+    }
   }
 
   h2 {
