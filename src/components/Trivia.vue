@@ -82,12 +82,12 @@
     <div v-if="isFinished">
       <h2>Your score: {{ score }}/{{ questions.length }}</h2>
       <div class="button-container">
-      <button v-if="score > 0" @click="submitScore">Submit Score</button>
       <button @click="startNewGame">Start New Game</button>
+      <button v-if="score > 0" @click="submitScore">Submit Score</button>
       </div>
     </div>
-    <hr v-if="leaderboard.length" />
-    <div class="leaderboard-container" v-if="leaderboard.length">
+    <hr v-if="(!gameStarted || isFinished) && leaderboard.length" />
+    <div class="leaderboard-container" v-if="(!gameStarted || isFinished) && leaderboard.length">
       <h2>Leaderboard</h2>
       <ul>
         <li v-for="(user, index) in leaderboard" :key="user.id" class="leaderboard-entry">
@@ -215,7 +215,7 @@ const submitAnswer = (answer: string) => {
     } else {
       isFinished.value = true;
     }
-  }, 1000); // Feedback duration
+  }, 2500); // Feedback duration
 };
 
 const submitScore = async () => {
@@ -306,6 +306,10 @@ onMounted(() => {
     margin-block-start: 32px;
     margin-block-end: 32px;
     border-color: rgba(255, 255, 255, 0.1);
+
+    @media (prefers-color-scheme: light) {
+      border-color: rgba(0,0,0, 0.1);
+    }
   }
 
   .preferences-container {
@@ -313,6 +317,11 @@ onMounted(() => {
     flex-direction: column;
     gap: 12px;
     justify-content: center;
+
+    h2 {
+      margin-top: 0;
+      margin-bottom: 24px;
+    }
 
     > * {
       flex: 1;
@@ -338,7 +347,7 @@ onMounted(() => {
 }
 
 .question-container {
-  margin-bottom: 60px;
+  // margin-bottom: 60px;
 
   .extra-info {
     display: flex;
@@ -350,7 +359,7 @@ onMounted(() => {
 
   h2 {
     max-width: 480px;
-    margin: 48px auto 4px;
+    margin: 0 auto 4px;
     display: flex;
     align-items: flex-start;
     justify-content: center;
@@ -395,7 +404,6 @@ onMounted(() => {
 }
 
 button {
-  background-color: #4541bb;
   display: block;
   padding: 10px;
   font-size: 16px;
@@ -403,12 +411,12 @@ button {
 }
 
 .correct {
-  background-color: #4CAF50; /* Green for correct answers */
+  background-color: #089d4b; /* Green for correct answers */
   color: white;
 }
 
 .incorrect {
-  background-color: #f44336; /* Red for incorrect answers */
+  background-color: var(--main-dark); /* Red for incorrect answers */
   color: white;
 }
 
@@ -430,6 +438,10 @@ button {
   flex-direction: column;
   gap: 12px;
   justify-content: center;
+
+  h2 {
+    margin: 0 auto 24px;
+  }
 
   ul {
     padding: 0;
