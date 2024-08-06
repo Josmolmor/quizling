@@ -13,9 +13,6 @@ import Trivia from "./components/Trivia.vue";
   bottom: 8px;
   right: 8px;
   font-size: 14px;
-  background-color: rgb(36 36 36 / 75%);
-  padding: 4px 8px;
-  border-radius: 8px;
 
   @media (prefers-color-scheme: light) {
     background-color: rgb(36 36 36 / 25%);
