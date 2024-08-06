@@ -1,10 +1,12 @@
 <template>
   <Trivia />
   <span class="copyright"><a href="https://molina.digital" target="_blank">molina.digital</a> · 2024</span>
+  <SpeedInsights />
 </template>
 
 <script setup>
 import Trivia from "./components/Trivia.vue";
+import { SpeedInsights } from "@vercel/speed-insights/next"
 </script>
 
 <style scoped lang="scss">
