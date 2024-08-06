@@ -1,7 +1,8 @@
 <template>
     <div class="leaderboard-container">
         <h2>Leaderboard</h2>
-        <ul>
+        <p v-if="isLoading">Loading leaderboards...</p>
+        <ul v-else>
             <li
                 v-for="(user, index) in leaderboard"
                 :key="user.id"
@@ -25,14 +26,18 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { collection, db } from '../services/firebase'
 import { getDocs, limit, orderBy, query } from 'firebase/firestore'
 import { format } from 'date-fns'
+import { useLoadingStore } from '@/stores/loading'
 
+const store = useLoadingStore()
+const isLoading = computed(() => store.loading)
 const leaderboard = ref<any[]>([])
 
 const fetchLeaderboard = async () => {
+    store.setLoading(true)
     try {
         const q = query(
             collection(db, 'leaderboard'),
@@ -45,6 +50,8 @@ const fetchLeaderboard = async () => {
         )
     } catch (error) {
         console.error('Failed to fetch leaderboard', error)
+    } finally {
+        store.setLoading(false)
     }
 }
 
