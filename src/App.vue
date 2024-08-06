@@ -1,21 +1,24 @@
 <template>
-  <Trivia />
-  <span class="copyright"><a href="https://molina.digital" target="_blank">molina.digital</a> · 2024</span>
+    <Navbar />
+    <Quiz />
+    <span class="footer"
+        >© 2024 Powered by
+        <a href="https://molina.digital" target="_blank">molina.digital</a> and
+        <a href="https://opentdb.com/" target="_blank"
+            >Open Trivia Database</a
+        ></span
+    >
 </template>
 
 <script setup>
-import Trivia from "./components/Trivia.vue";
+import Quiz from './views/Quiz.vue'
+import Navbar from './components/Navbar.vue'
 </script>
 
 <style scoped lang="scss">
-.copyright {
-  position: fixed;
-  bottom: 8px;
-  right: 8px;
-  font-size: 14px;
-
-  @media (prefers-color-scheme: light) {
-    background-color: rgb(36 36 36 / 25%);
-  }
+.footer {
+    margin-top: auto;
+    padding: 32px;
+    text-align: center;
 }
 </style>
