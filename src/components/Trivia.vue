@@ -344,8 +344,6 @@ onMounted(() => {
 }
 
 .question-container {
-  margin: auto 8px;
-
   .extra-info {
     display: flex;
     align-items: baseline;
