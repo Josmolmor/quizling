@@ -1,6 +1,6 @@
 <template>
     <div class="leaderboard-container">
-        <h2>Leaderboard</h2>
+        <h1>Leaderboard</h1>
         <p v-if="isLoading">Loading leaderboards...</p>
         <ul v-else>
             <li
@@ -27,7 +27,7 @@
 
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
-import { collection, db } from '../services/firebase'
+import { auth, collection, db } from '../services/firebase'
 import { getDocs, limit, orderBy, query } from 'firebase/firestore'
 import { format } from 'date-fns'
 import { useLoadingStore } from '@/stores/loading'
@@ -61,6 +61,9 @@ const formatTimestamp = (timestamp: number) => {
 
 onMounted(() => {
     fetchLeaderboard()
+    auth.onAuthStateChanged((currentUser) => {
+        fetchLeaderboard()
+    })
 })
 </script>
 

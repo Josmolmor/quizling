@@ -97,7 +97,7 @@
         <div v-else-if="!isFinished">
             <h2>Loading</h2>
         </div>
-        <div v-if="isFinished">
+        <div class="outcome" v-if="isFinished">
             <h2>Your score: {{ score }}/{{ questions.length }}</h2>
             <div class="button-container">
                 <button @click="startNewGame">Start New Game</button>
@@ -306,20 +306,8 @@ onMounted(() => {
 
 <style scoped lang="scss">
 .trivia {
-    align-self: center;
-    margin: 1rem;
-    padding: 1rem;
-    border-radius: 8px;
-
-    hr {
-        margin-block-start: 32px;
-        margin-block-end: 32px;
-        border-color: rgba(255, 255, 255, 0.1);
-
-        @media (prefers-color-scheme: light) {
-            border-color: rgba(0, 0, 0, 0.1);
-        }
-    }
+    max-width: 480px;
+    margin: auto;
 
     .preferences-container {
         display: flex;
@@ -447,5 +435,9 @@ button {
 .form-control {
     padding: 12px;
     font-size: 16px;
+}
+
+.outcome {
+    text-align: center;
 }
 </style>

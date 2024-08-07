@@ -45,7 +45,7 @@
                 />
             </svg>
         </RouterLink>
-        <RouterLink title="Analytics" to="/analytics"
+        <RouterLink v-if="user" title="Analytics" to="/analytics"
             ><svg
                 xmlns="http://www.w3.org/2000/svg"
                 class="icon icon-tabler icon-tabler-chart-histogram"
@@ -104,7 +104,9 @@ import {
     GoogleAuthProvider,
     signOut as fbSignOut,
 } from '../services/firebase'
+import { useRouter } from 'vue-router'
 
+const router = useRouter()
 const store = useUserStore()
 const user = computed(() => store.user)
 
@@ -124,6 +126,7 @@ const signOut = async () => {
     try {
         await fbSignOut(auth)
         store.setUser(null)
+        router.push('/')
     } catch (error) {
         console.error('Error during sign-out', error)
         alert('Sign-out failed. Please try again.')
@@ -143,7 +146,7 @@ nav {
     @include flex;
     gap: 16px;
     margin-bottom: auto;
-    padding: 16px;
+    padding: 16px 0;
 
     .user-data {
         @include flex;
