@@ -53,6 +53,15 @@
                 </option>
             </select>
             <button @click="startGame">Start Game</button>
+            <label class="analytics-check">
+                <input
+                    type="checkbox"
+                    @change="analyticsTrackingToggle"
+                    :checked="!analyticsStore.trackAnalytics"
+                />
+                Check this if you <strong>don't</strong> want to track your
+                analytics the next round of questions
+            </label>
         </div>
         <div
             v-else-if="questions.length && !isFinished"
@@ -110,7 +119,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, InputHTMLAttributes } from 'vue'
 import { fetchTriviaQuestions, TriviaQuestion } from '../services/trivia'
 import { htmlDecode } from '../utils/htmlDecode'
 import {
@@ -125,6 +134,7 @@ import {
 } from '../services/firebase'
 
 import { useUserStore } from '../stores/user'
+import { useAnalyticsStore } from '@/stores/analytics'
 
 const questions = ref<TriviaQuestion[]>([])
 const currentQuestionIndex = ref(0)
@@ -141,6 +151,7 @@ const feedbackVisible = ref(false)
 const gameStarted = ref(false)
 
 const store = useUserStore()
+const analyticsStore = useAnalyticsStore()
 
 const questionOptions = [5, 10, 15, 20, 25, 30, 35, 40, 45, 50]
 
@@ -161,6 +172,12 @@ const fetchQuestions = async () => {
     } catch (error) {
         console.error('Failed to fetch questions', error)
     }
+}
+
+const analyticsTrackingToggle = async (e: Event) => {
+    return analyticsStore.setAnalyticsTracking(
+        !(e.target as HTMLInputElement).checked
+    )
 }
 
 const startGame = async () => {
@@ -230,7 +247,7 @@ const submitAnswer = (answer: string) => {
     const correct = answer === currentQuestion.value?.correct_answer
 
     // only track answer if user is logged in
-    if (store.userEmail) {
+    if (store.userEmail && analyticsStore.trackAnalytics) {
         trackAnswerAnalytic(correct)
     }
 
@@ -332,7 +349,7 @@ onMounted(() => {
         }
 
         button {
-            margin-top: 16px;
+            margin: 16px 0;
         }
     }
 
