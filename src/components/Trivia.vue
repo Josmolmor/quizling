@@ -108,9 +108,20 @@
         </div>
         <div class="outcome" v-if="isFinished">
             <h2>Your score: {{ score }}/{{ questions.length }}</h2>
+            <p>
+                Your best score before this attempt was
+                <strong>{{ personalBest }}</strong
+                ><br />
+                <span v-if="score > personalBest"
+                    >Congrats! you got a new personal high score</span
+                >
+            </p>
             <div class="button-container">
                 <button @click="startNewGame">Start New Game</button>
-                <button v-if="score > 0" @click="submitScore">
+                <button
+                    v-if="score > 0 && score > personalBest"
+                    @click="submitScore"
+                >
                     Submit Score
                 </button>
             </div>
@@ -135,6 +146,8 @@ import {
 
 import { useUserStore } from '../stores/user'
 import { useAnalyticsStore } from '@/stores/analytics'
+import { getDocs, limit, query, where } from 'firebase/firestore'
+import { toast } from '@steveyuowo/vue-hot-toast'
 
 const questions = ref<TriviaQuestion[]>([])
 const currentQuestionIndex = ref(0)
@@ -306,6 +319,9 @@ const submitScore = async () => {
         alert(
             'There was an error submitting your score. Please try again later.'
         )
+    } finally {
+        toast.success('Score updated!')
+        startNewGame()
     }
 }
 
@@ -314,9 +330,38 @@ const startNewGame = () => {
     fetchQuestions()
 }
 
+const personalBest = ref(0)
+const fetchPersonalBest = async (email: string) => {
+    try {
+        const firestoreEmailValue = email.replace(/\./g, '_')
+        const q = query(
+            collection(db, 'leaderboard'),
+            where('__name__', '==', firestoreEmailValue),
+            limit(1)
+        )
+        const snapshot = await getDocs(q)
+        if (!snapshot.empty) {
+            snapshot.forEach((doc) => {
+                // console.log(`${doc.id} => ${JSON.stringify(doc.data())}`)
+                personalBest.value = doc.data().score
+            })
+        } else {
+            console.log('No documents found')
+        }
+    } catch (error) {
+        console.error(
+            `Failed to fetch the personal best for user ${email}`,
+            error
+        )
+    }
+}
+
 onMounted(() => {
     auth.onAuthStateChanged((currentUser) => {
         store.setUser(currentUser)
+        if (currentUser?.email) {
+            fetchPersonalBest(currentUser.email)
+        }
     })
 })
 </script>
@@ -456,5 +501,9 @@ button {
 
 .outcome {
     text-align: center;
+
+    p {
+        margin: 32px auto;
+    }
 }
 </style>

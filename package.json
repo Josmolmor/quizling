@@ -19,6 +19,7 @@
         "vue-router": "4"
     },
     "devDependencies": {
+        "@steveyuowo/vue-hot-toast": "^1.2.5",
         "@vitejs/plugin-vue": "^5.0.5",
         "date-fns": "^3.6.0",
         "prettier": "3.3.3",

@@ -1,4 +1,5 @@
 <template>
+    <Toaster />
     <Navbar />
     <RouterView />
     <span class="footer"
@@ -11,6 +12,8 @@
 </template>
 
 <script setup>
+import { Toaster } from '@steveyuowo/vue-hot-toast'
+import '@steveyuowo/vue-hot-toast/vue-hot-toast.css'
 import Navbar from './components/Navbar.vue'
 </script>
 

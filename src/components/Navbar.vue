@@ -150,6 +150,7 @@ nav {
 
     .user-data {
         @include flex;
+        gap: 12px;
         margin-left: auto;
 
         p {
