@@ -1,12 +1,26 @@
 <div style="display: flex; align-items: baseline; gap: 8px;">
-<img src="public/certificate-check-svgrepo-com.svg" height="24"/><h1>Quizling</h1>
+    <h1><img src="public/certificate-check-svgrepo-com.svg" height="24" />Quizling</h1>
 </div>
 
 <p>Trivia-like app using open trivia database API with leaderboard and user analytics</p>
 
-<img width="920" alt="image" src="https://github.com/user-attachments/assets/477792a4-ef31-4c0c-9b80-f9469ffb1e1f">
+<img width="1727" alt="image" src="https://github.com/user-attachments/assets/6044e10d-7e57-4881-8020-c9810d5c1e22">
 
-<img width="920" alt="image" src="https://github.com/user-attachments/assets/8d7e4c0b-ae1c-46e8-b7a8-ce50ba823024">
+<hr />
+
+<img width="1727" alt="image" src="https://github.com/user-attachments/assets/0a41cfec-42c7-4083-8a0f-ba93accc900e">
+
+<hr />
+
+<img width="1728" alt="image" src="https://github.com/user-attachments/assets/c2211966-fdec-4104-812f-687e10d0d81a">
+
+<hr />
+
+<img width="1720" alt="image" src="https://github.com/user-attachments/assets/85b7ab3c-e949-47cf-a004-e647ffe42da6">
+
+<hr />
+
+<img width="1726" alt="image" src="https://github.com/user-attachments/assets/251f710d-573d-4baf-8ca4-5cce31a291ae">
 
 <ul>
     <li>API: <a href="https://opentdb.com/" target="_blank">opentdb</a></li>
