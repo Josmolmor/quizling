@@ -3,15 +3,15 @@
         <h1>Analytics</h1>
         <div class="summary">
             <div class="total">
-                <span>Total number of answers</span>
+                <span>Total answers</span>
                 <h2>{{ totalAnswers }}</h2>
             </div>
             <div class="right">
-                <span>Total number of right answers</span>
+                <span>Right answers</span>
                 <h2>{{ totalRightAnswers }}</h2>
             </div>
             <div class="wrong">
-                <span>Total number of wrong answers</span>
+                <span>Wrong answers</span>
                 <h2>{{ totalAnswers - totalRightAnswers }}</h2>
             </div>
         </div>
@@ -148,7 +148,7 @@ const parsedCategoryData: Ref<OutputByCategory[]> = computed(() => {
 })
 
 const chartCategoryData = computed(() => ({
-    labels: parsedCategoryData.value.map((c) => c.category),
+    labels: parsedCategoryData.value.map((c) => htmlDecode(c.category)),
     datasets: [
         {
             label: 'Total',
@@ -379,6 +379,17 @@ const chartTypeData = computed(() => ({
 const chartOptions: Ref<ChartOptions> = computed(() => ({
     responsive: true,
     aspectRatio: 1.25,
+    scales: {
+        x: {
+            ticks: {
+                callback: function (value) {
+                    const maxChars = 10
+                    const label = this.getLabelForValue(value as any)
+                    return `${label.substr(0, maxChars)}${label.length > maxChars ? '...' : ''}`
+                },
+            },
+        },
+    },
 }))
 
 onMounted(() => {
@@ -447,11 +458,12 @@ onMounted(() => {
     }
 
     .charts-container {
-        min-width: 560px;
         padding-bottom: 64px;
         display: block;
+        width: 100%;
 
         @media (min-width: 768px) {
+            min-width: 560px;
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 48px;
@@ -459,11 +471,15 @@ onMounted(() => {
         }
 
         .chart-content {
-            max-width: 30dvw;
-            width: 100%;
             background-color: #151515;
             padding: 16px 32px;
             border-radius: 8px;
+
+            @media (min-width: 768px) {
+                width: 100%;
+                max-width: 33dvw;
+                margin: auto;
+            }
         }
     }
 }
