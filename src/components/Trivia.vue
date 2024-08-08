@@ -242,7 +242,7 @@ const isAnswerIncorrect = (answer: string) => {
 }
 
 const trackAnswerAnalytic = async (correct: boolean) => {
-    const timestamp = new Date().setHours(0, 0, 0, 0)
+    const timestamp = Date.now()
     const category = currentQuestion.value.category
     const difficulty = currentQuestion.value.difficulty
     const type = currentQuestion.value.type

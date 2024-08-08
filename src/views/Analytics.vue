@@ -19,6 +19,11 @@
         <div class="charts-container" v-else>
             <div class="chart-content">
                 <h2>By Category</h2>
+                <Bar
+                    id="category-bar-chart"
+                    :options="chartOptions"
+                    :data="chartCategoryData"
+                />
                 <div class="summary category">
                     <span v-if="categoryStats?.bestCategory"
                         ><strong>Best category</strong><br />
@@ -33,10 +38,13 @@
                         }}%)
                     </span>
                 </div>
-                <Bar
-                    id="category-bar-chart"
+            </div>
+            <div class="chart-content">
+                <h2>Performance</h2>
+                <Line
+                    id="performance-bar-chart"
                     :options="chartOptions"
-                    :data="chartCategoryData"
+                    :data="chartPerformanceData"
                 />
             </div>
             <div class="chart-content">
@@ -62,10 +70,10 @@
 <script setup lang="ts">
 import { getDocs, orderBy, query, where } from 'firebase/firestore'
 import { auth, collection, db } from '@/services/firebase'
-import { computed, onMounted, Ref, ref, watch } from 'vue'
+import { computed, defineComponent, onMounted, Ref, ref, watch } from 'vue'
 import { useLoadingStore } from '@/stores/loading'
 import { useUserStore } from '@/stores/user'
-import { Bar } from 'vue-chartjs'
+import { Bar, Line } from 'vue-chartjs'
 import {
     Chart as ChartJS,
     Title,
@@ -75,11 +83,25 @@ import {
     CategoryScale,
     LinearScale,
     ChartOptions,
-    ChartData,
+    LineElement,
+    PointElement,
+    LineController,
+    BarController,
 } from 'chart.js'
 import { htmlDecode } from '@/utils/htmlDecode'
 
-ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
+ChartJS.register(
+    Title,
+    Tooltip,
+    Legend,
+    BarElement,
+    CategoryScale,
+    LinearScale,
+    LineElement,
+    PointElement,
+    LineController,
+    BarController
+)
 
 const loadingStore = useLoadingStore()
 const isLoading = computed(() => loadingStore.loading)
@@ -179,6 +201,88 @@ const chartCategoryData = computed(() => ({
             },
             backgroundColor: '#d31649',
             borderWidth: 1,
+        },
+    ],
+}))
+
+type OutputByPerformance = {
+    date: string
+    total: number
+    right: number
+    wrong: number
+}
+
+const parsedPerformanceData: Ref<OutputByPerformance[]> = computed(() => {
+    const entries = analytics.value
+        .map((a) => ({
+            answeredAt: a.answeredAt,
+            outcome: a.outcome,
+        }))
+        .sort((x, y) => {
+            return x.answeredAt - y.answeredAt
+        })
+
+    const result: { [key: string]: OutputByPerformance } = {}
+    entries.forEach((entry) => {
+        // Convert timestamp to a readable date (YYYY-MM-DD)
+        const date = new Date(entry.answeredAt).toISOString().split('T')[0]
+
+        // If the date key doesn't exist in the result, create it
+        if (!result[date]) {
+            result[date] = { date, total: 0, right: 0, wrong: 0 }
+        }
+
+        // Increment the total count
+        result[date].total += 1
+
+        // Check if the outcome is "1" (right)
+        if (entry.outcome === 1) {
+            result[date].right += 1
+        }
+
+        // Calculate the wrong count as total - right
+        result[date].wrong = result[date].total - result[date].right
+    })
+
+    // Convert the result object into an array of OutputEntry
+    return Object.values(result)
+})
+
+const chartPerformanceData = computed(() => ({
+    labels: parsedPerformanceData.value.map((c) => c.date),
+    datasets: [
+        {
+            label: 'Total',
+            data: parsedPerformanceData.value.map((c) => c.total),
+            parsing: {
+                xAxisKey: 'date',
+                yAxisKey: 'total',
+            },
+            backgroundColor: '#0791e7',
+            borderWidth: 1,
+            borderColor: '#0791e7',
+        },
+        {
+            label: 'Right answers',
+            data: parsedPerformanceData.value.map((c) => c.right),
+            parsing: {
+                xAxisKey: 'date',
+                yAxisKey: 'right',
+            },
+            backgroundColor: '#1dd75e',
+            borderWidth: 1,
+            borderColor: '#1dd75e',
+        },
+        {
+            label: 'Wrong answers',
+            data: parsedPerformanceData.value.map((c) => c.wrong),
+            parsing: {
+                xAxisKey: 'date',
+                yAxisKey: 'wrong',
+            },
+            backgroundColor: '#d31649',
+            borderWidth: 1,
+            borderColor: '#d31649',
         },
     ],
 }))
@@ -381,12 +485,20 @@ const chartOptions: Ref<ChartOptions> = computed(() => ({
     aspectRatio: 1.25,
     scales: {
         x: {
+            grid: {
+                color: 'rgba(255,255,255,0.05)',
+            },
             ticks: {
                 callback: function (value) {
                     const maxChars = 10
                     const label = this.getLabelForValue(value as any)
                     return `${label.substr(0, maxChars)}${label.length > maxChars ? '...' : ''}`
                 },
+            },
+        },
+        y: {
+            grid: {
+                color: 'rgba(255,255,255,0.1)',
             },
         },
     },
@@ -445,7 +557,7 @@ onMounted(() => {
         }
 
         &.category {
-            margin-bottom: 32px;
+            margin-top: 32px;
             justify-content: space-between;
 
             > span > strong {
@@ -472,13 +584,18 @@ onMounted(() => {
 
         .chart-content {
             background-color: #151515;
-            padding: 16px 32px;
+            padding: 24px 32px;
             border-radius: 8px;
 
             @media (min-width: 768px) {
                 width: 100%;
                 max-width: 33dvw;
-                margin: auto;
+                margin: 0 auto;
+                align-self: flex-start;
+            }
+
+            h2 {
+                margin: 0 auto 24px;
             }
         }
     }
