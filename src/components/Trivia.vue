@@ -1,6 +1,6 @@
 <template>
     <div class="trivia">
-        <div v-if="!gameStarted" class="preferences-container">
+        <div v-if="!gameStore.gameStarted" class="preferences-container">
             <h2>Select Your Preferences</h2>
             <!-- Dropdowns for category, difficulty, type, amount -->
             <select v-model="selectedCategory" class="form-control">
@@ -196,6 +196,7 @@ import { getDocs, limit, query, where } from 'firebase/firestore'
 import { toast } from '@steveyuowo/vue-hot-toast'
 import StopwatchIcon from '@/components/StopwatchIcon.vue'
 import Countdown from '@/components/Countdown.vue'
+import { useGameStore } from '@/stores/game'
 
 ChartJS.register(ArcElement, Tooltip, Legend)
 
@@ -211,10 +212,10 @@ const selectedAmount = ref(5)
 const selectedAnswer = ref<string | null>(null)
 const correctAnswer = ref<string | null>(null)
 const feedbackVisible = ref(false)
-const gameStarted = ref(false)
 
 const store = useUserStore()
 const analyticsStore = useAnalyticsStore()
+const gameStore = useGameStore()
 
 const questionOptions = [5, 10, 15, 20, 25, 30, 35, 40, 45, 50]
 
@@ -233,6 +234,8 @@ const fetchQuestions = async () => {
             type: selectedType.value,
             amount: selectedAmount.value,
         })
+
+        console.log('fetch =>', questions.value)
     } catch (error) {
         console.error('Failed to fetch questions', error)
     }
@@ -248,7 +251,7 @@ const isTimedMode = ref(false)
 const startGame = async (timed: boolean) => {
     isTimedMode.value = timed
     await fetchQuestions()
-    gameStarted.value = true
+    gameStore.setGameStarted(true)
 }
 
 const timeRanOut = ref(false)
@@ -385,7 +388,7 @@ const submitScore = async () => {
 }
 
 const startNewGame = () => {
-    gameStarted.value = false
+    gameStore.setGameStarted(false)
     fetchQuestions()
 }
 
@@ -427,7 +430,6 @@ onMounted(() => {
                 analyticsStore.setAnalyticsTracking(true)
             }
         }
-        startNewGame()
     })
 })
 </script>

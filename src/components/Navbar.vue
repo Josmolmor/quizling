@@ -68,7 +68,11 @@
         ></RouterLink>
         <div class="user-data" v-if="user">
             <p>{{ user.displayName }}</p>
-            <button @click="signOut">
+            <button
+                class="sign-out"
+                @click="signOut"
+                v-if="!gameStore.gameStarted"
+            >
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
                     class="svg-snoweb svg-theme-light"
@@ -91,7 +95,9 @@
                 </svg>
             </button>
         </div>
-        <button v-else @click="signInWithGoogle">Log in with Google</button>
+        <button v-else-if="!gameStore.gameStarted" @click="signInWithGoogle">
+            Log in with Google
+        </button>
     </nav>
 </template>
 
@@ -105,10 +111,12 @@ import {
     signOut as fbSignOut,
 } from '../services/firebase'
 import { useRouter } from 'vue-router'
+import { useGameStore } from '@/stores/game'
 
 const router = useRouter()
 const store = useUserStore()
 const user = computed(() => store.user)
+const gameStore = useGameStore()
 
 // Sign in with Google
 const signInWithGoogle = async () => {
@@ -174,6 +182,13 @@ nav {
 
         p {
             margin: 0;
+        }
+
+        .sign-out {
+            padding: 0;
+            font-size: 14px;
+            background-color: transparent;
+            border: none;
         }
     }
 
