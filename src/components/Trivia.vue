@@ -53,11 +53,11 @@
                 </option>
             </select>
             <div class="button-container start">
-                <button @click="startGame">Start Game</button>
+                <button @click="startGame(false)">Standard mode</button>
                 <div class="badge-button">
                     <span class="notify-badge">NEW</span>
-                    <button>
-                        <Stopwatch />
+                    <button @click="startGame(true)">
+                        <StopwatchIcon />
                         Timed mode
                     </button>
                 </div>
@@ -76,6 +76,14 @@
             v-else-if="questions.length && !isFinished"
             class="question-container"
         >
+            <Countdown
+                v-if="isTimedMode"
+                :initial-time="selectedAmount * 5"
+                :pending-answers="
+                    questions.length + 1 - (currentQuestionIndex + 1)
+                "
+                @on-finished="countdownFinished"
+            />
             <h2>
                 <span class="current-index"
                     >#{{ currentQuestionIndex + 1 }}/{{
@@ -117,6 +125,30 @@
         </div>
         <div class="outcome" v-if="isFinished">
             <h2>Your score: {{ score }}/{{ questions.length }}</h2>
+            <p v-if="isTimedMode && timeRanOut">You ran out of time</p>
+            <Pie
+                :data="{
+                    labels: ['Right', 'Wrong'],
+                    datasets: [
+                        {
+                            backgroundColor: ['#1dd75e', '#d31649'],
+                            data: [score, questions.length - score],
+                            borderWidth: 0,
+                        },
+                    ],
+                }"
+                :options="{
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            display: false,
+                            labels: {
+                                color: 'white',
+                            },
+                        },
+                    },
+                }"
+            />
             <p v-if="store.userEmail">
                 Your best score before this attempt was
                 <strong>{{ personalBest }}</strong
@@ -156,12 +188,16 @@ import {
     collection,
     addDoc,
 } from '../services/firebase'
-
+import { Pie } from 'vue-chartjs'
+import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js'
 import { useUserStore } from '../stores/user'
 import { useAnalyticsStore } from '@/stores/analytics'
 import { getDocs, limit, query, where } from 'firebase/firestore'
 import { toast } from '@steveyuowo/vue-hot-toast'
-import Stopwatch from '@/components/Stopwatch.vue'
+import StopwatchIcon from '@/components/StopwatchIcon.vue'
+import Countdown from '@/components/Countdown.vue'
+
+ChartJS.register(ArcElement, Tooltip, Legend)
 
 const questions = ref<TriviaQuestion[]>([])
 const currentQuestionIndex = ref(0)
@@ -184,18 +220,19 @@ const questionOptions = [5, 10, 15, 20, 25, 30, 35, 40, 45, 50]
 
 const fetchQuestions = async () => {
     try {
-        questions.value = await fetchTriviaQuestions({
-            category: selectedCategory.value,
-            difficulty: selectedDifficulty.value,
-            type: selectedType.value,
-            amount: selectedAmount.value,
-        })
         currentQuestionIndex.value = 0
         score.value = 0
         isFinished.value = false
         feedbackVisible.value = false
         selectedAnswer.value = null
         correctAnswer.value = null
+
+        questions.value = await fetchTriviaQuestions({
+            category: selectedCategory.value,
+            difficulty: selectedDifficulty.value,
+            type: selectedType.value,
+            amount: selectedAmount.value,
+        })
     } catch (error) {
         console.error('Failed to fetch questions', error)
     }
@@ -207,9 +244,17 @@ const analyticsTrackingToggle = async (e: Event) => {
     )
 }
 
-const startGame = async () => {
+const isTimedMode = ref(false)
+const startGame = async (timed: boolean) => {
+    isTimedMode.value = timed
     await fetchQuestions()
     gameStarted.value = true
+}
+
+const timeRanOut = ref(false)
+const countdownFinished = () => {
+    isFinished.value = true
+    timeRanOut.value = true
 }
 
 const currentQuestion = computed(
@@ -439,8 +484,8 @@ onMounted(() => {
                 pointer-events: none;
                 font-weight: bold;
                 position: absolute;
-                right: -32px;
-                top: 0;
+                right: -24px;
+                top: -4px;
                 background: #ffeb00;
                 text-align: center;
                 border-radius: 24px;

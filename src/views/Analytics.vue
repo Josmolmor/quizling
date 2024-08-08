@@ -483,6 +483,13 @@ const chartTypeData = computed(() => ({
 const chartOptions: Ref<ChartOptions> = computed(() => ({
     responsive: true,
     aspectRatio: 1.25,
+    plugins: {
+        legend: {
+            labels: {
+                color: 'white',
+            },
+        },
+    },
     scales: {
         x: {
             grid: {

@@ -159,6 +159,12 @@ nav {
                 color: var(--main);
             }
         }
+
+        &.router-link-active {
+            svg {
+                color: var(--main);
+            }
+        }
     }
 
     .user-data {

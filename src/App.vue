@@ -4,9 +4,10 @@
     <RouterView />
     <span class="footer"
         >© 2024 Powered by
-        <a href="https://molina.digital" target="_blank">molina.digital</a> and
-        <a href="https://opentdb.com/" target="_blank"
-            >Open Trivia Database</a
+        <a href="https://opentdb.com/" target="_blank">Open Trivia Database</a>.
+        Coded by
+        <a href="https://molina.digital" target="_blank"
+            >molina.digital</a
         ></span
     >
 </template>
