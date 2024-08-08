@@ -53,7 +53,7 @@
                 </option>
             </select>
             <button @click="startGame">Start Game</button>
-            <label class="analytics-check">
+            <label class="analytics-check" v-if="store.userEmail">
                 <input
                     type="checkbox"
                     @change="analyticsTrackingToggle"
@@ -108,7 +108,7 @@
         </div>
         <div class="outcome" v-if="isFinished">
             <h2>Your score: {{ score }}/{{ questions.length }}</h2>
-            <p>
+            <p v-if="store.userEmail">
                 Your best score before this attempt was
                 <strong>{{ personalBest }}</strong
                 ><br />
@@ -119,7 +119,11 @@
             <div class="button-container">
                 <button @click="startNewGame">Start New Game</button>
                 <button
-                    v-if="score > 0 && score > personalBest"
+                    v-if="
+                        score > 0 &&
+                        ((store.userEmail && score > personalBest) ||
+                            !store.userEmail)
+                    "
                     @click="submitScore"
                 >
                     Submit Score
@@ -359,9 +363,16 @@ const fetchPersonalBest = async (email: string) => {
 onMounted(() => {
     auth.onAuthStateChanged((currentUser) => {
         store.setUser(currentUser)
-        if (currentUser?.email) {
-            fetchPersonalBest(currentUser.email)
+        if (!currentUser) {
+            personalBest.value = 0
+            analyticsStore.setAnalyticsTracking(false)
+        } else {
+            if (currentUser?.email) {
+                fetchPersonalBest(currentUser.email)
+                analyticsStore.setAnalyticsTracking(true)
+            }
         }
+        startNewGame()
     })
 })
 </script>
