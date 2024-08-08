@@ -52,7 +52,16 @@
                     {{ num }} questions
                 </option>
             </select>
-            <button @click="startGame">Start Game</button>
+            <div class="button-container start">
+                <button @click="startGame">Start Game</button>
+                <div class="badge-button">
+                    <span class="notify-badge">NEW</span>
+                    <button>
+                        <Stopwatch />
+                        Timed mode
+                    </button>
+                </div>
+            </div>
             <label class="analytics-check" v-if="store.userEmail">
                 <input
                     type="checkbox"
@@ -152,6 +161,7 @@ import { useUserStore } from '../stores/user'
 import { useAnalyticsStore } from '@/stores/analytics'
 import { getDocs, limit, query, where } from 'firebase/firestore'
 import { toast } from '@steveyuowo/vue-hot-toast'
+import Stopwatch from '@/components/Stopwatch.vue'
 
 const questions = ref<TriviaQuestion[]>([])
 const currentQuestionIndex = ref(0)
@@ -405,7 +415,15 @@ onMounted(() => {
         }
 
         button {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
             margin: 16px 0;
+
+            > svg {
+                width: 19px;
+            }
         }
     }
 
@@ -414,6 +432,23 @@ onMounted(() => {
         justify-content: center;
         align-items: center;
         gap: 8px;
+
+        .badge-button {
+            position: relative;
+            .notify-badge {
+                pointer-events: none;
+                font-weight: bold;
+                position: absolute;
+                right: -32px;
+                top: 0;
+                background: #ffeb00;
+                text-align: center;
+                border-radius: 24px;
+                color: black;
+                padding: 6px 12px;
+                font-size: 12px;
+            }
+        }
     }
 }
 
