@@ -40,7 +40,7 @@
                 </div>
             </div>
             <div class="chart-content">
-                <h2>Performance</h2>
+                <h2>By day</h2>
                 <Line
                     id="performance-bar-chart"
                     :options="chartOptions"
