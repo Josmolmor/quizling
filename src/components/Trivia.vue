@@ -177,8 +177,9 @@
                 }"
             />
             <p v-if="store.userEmail">
-                Your best score before this attempt was
-                <strong>{{ analyticsStore.personalBest }}</strong
+                <span v-if="analyticsStore.personalBest > 0"
+                    >Your best score before this attempt was
+                    <strong>{{ analyticsStore.personalBest }}</strong></span
                 ><br />
                 <span v-if="score > analyticsStore.personalBest"
                     >Congrats! you got a new personal high score</span

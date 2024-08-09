@@ -159,6 +159,7 @@ nav {
     a {
         display: flex;
         align-items: center;
+        padding: 4px;
 
         svg {
             transition: color 0.2s ease;
@@ -188,10 +189,11 @@ nav {
         }
 
         .sign-out {
-            padding: 0;
+            padding: 4px;
             font-size: 14px;
             background-color: transparent;
             border: none;
+            cursor: pointer;
         }
     }
 
@@ -213,7 +215,7 @@ nav {
         }
 
         > svg {
-            height: 22px;
+            height: 24px;
         }
     }
 }
