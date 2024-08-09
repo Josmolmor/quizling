@@ -2,7 +2,7 @@
     <div class="leaderboard-container">
         <h1>Leaderboard</h1>
         <p v-if="isLoading">Loading leaderboards...</p>
-        <ul v-else>
+        <ul v-else-if="leaderboard.length">
             <li
                 v-for="(user, index) in leaderboard"
                 :key="user.id"
@@ -22,6 +22,7 @@
                 >
             </li>
         </ul>
+        <p v-else>No scores submitted yet</p>
     </div>
 </template>
 
