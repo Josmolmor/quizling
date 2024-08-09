@@ -1,5 +1,6 @@
 <template>
     <Toaster />
+    <Loading v-show="loadingStore.loading" />
     <Navbar />
     <RouterView />
     <span class="footer"
@@ -16,6 +17,33 @@
 import { Toaster } from '@steveyuowo/vue-hot-toast'
 import '@steveyuowo/vue-hot-toast/vue-hot-toast.css'
 import Navbar from './components/Navbar.vue'
+import { onMounted } from 'vue'
+import { auth } from './services/firebase'
+import { useUserStore } from './stores/user'
+import { useAnalyticsStore } from './stores/analytics'
+import Loading from '@/components/Loading.vue'
+import { useLoadingStore } from './stores/loading'
+
+const userStore = useUserStore()
+const analyticsStore = useAnalyticsStore()
+const loadingStore = useLoadingStore()
+
+onMounted(() => {
+    auth.onAuthStateChanged((currentUser) => {
+        loadingStore.setLoading(true)
+        userStore.setUser(currentUser)
+        if (!currentUser) {
+            analyticsStore.setPersonalBest(0)
+            analyticsStore.setAnalyticsTracking(false)
+        } else {
+            if (currentUser?.email) {
+                analyticsStore.fetchPersonalBest(currentUser.email)
+                analyticsStore.setAnalyticsTracking(true)
+            }
+        }
+        loadingStore.setLoading(false)
+    })
+})
 </script>
 
 <style scoped lang="scss">

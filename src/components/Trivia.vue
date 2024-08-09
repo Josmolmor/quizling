@@ -151,9 +151,9 @@
             />
             <p v-if="store.userEmail">
                 Your best score before this attempt was
-                <strong>{{ personalBest }}</strong
+                <strong>{{ analyticsStore.personalBest }}</strong
                 ><br />
-                <span v-if="score > personalBest"
+                <span v-if="score > analyticsStore.personalBest"
                     >Congrats! you got a new personal high score</span
                 >
             </p>
@@ -162,7 +162,8 @@
                 <button
                     v-if="
                         score > 0 &&
-                        ((store.userEmail && score > personalBest) ||
+                        ((store.userEmail &&
+                            score > analyticsStore.personalBest) ||
                             !store.userEmail)
                     "
                     @click="submitScore"
@@ -176,8 +177,8 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted, InputHTMLAttributes } from 'vue'
-import { fetchTriviaQuestions, TriviaQuestion } from '../services/trivia'
-import { htmlDecode } from '../utils/htmlDecode'
+import { fetchTriviaQuestions, TriviaQuestion } from '@/services/trivia'
+import { htmlDecode } from '@/utils/htmlDecode'
 import {
     auth,
     db,
@@ -187,12 +188,11 @@ import {
     getDoc,
     collection,
     addDoc,
-} from '../services/firebase'
+} from '@/services/firebase'
 import { Pie } from 'vue-chartjs'
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js'
-import { useUserStore } from '../stores/user'
+import { useUserStore } from '@/stores/user'
 import { useAnalyticsStore } from '@/stores/analytics'
-import { getDocs, limit, query, where } from 'firebase/firestore'
 import { toast } from '@steveyuowo/vue-hot-toast'
 import StopwatchIcon from '@/components/StopwatchIcon.vue'
 import Countdown from '@/components/Countdown.vue'
@@ -391,53 +391,17 @@ const startNewGame = () => {
     gameStore.setGameStarted(false)
     fetchQuestions()
 }
-
-const personalBest = ref(0)
-const fetchPersonalBest = async (email: string) => {
-    try {
-        const firestoreEmailValue = email.replace(/\./g, '_')
-        const q = query(
-            collection(db, 'leaderboard'),
-            where('__name__', '==', firestoreEmailValue),
-            limit(1)
-        )
-        const snapshot = await getDocs(q)
-        if (!snapshot.empty) {
-            snapshot.forEach((doc) => {
-                // console.log(`${doc.id} => ${JSON.stringify(doc.data())}`)
-                personalBest.value = doc.data().score
-            })
-        } else {
-            console.log('No documents found')
-        }
-    } catch (error) {
-        console.error(
-            `Failed to fetch the personal best for user ${email}`,
-            error
-        )
-    }
-}
-
-onMounted(() => {
-    auth.onAuthStateChanged((currentUser) => {
-        store.setUser(currentUser)
-        if (!currentUser) {
-            personalBest.value = 0
-            analyticsStore.setAnalyticsTracking(false)
-        } else {
-            if (currentUser?.email) {
-                fetchPersonalBest(currentUser.email)
-                analyticsStore.setAnalyticsTracking(true)
-            }
-        }
-    })
-})
 </script>
 
 <style scoped lang="scss">
 .trivia {
     max-width: 480px;
     margin: auto;
+    width: 100%;
+
+    h2 {
+        text-align: center;
+    }
 
     .preferences-container {
         display: flex;

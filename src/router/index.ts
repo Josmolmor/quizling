@@ -1,9 +1,5 @@
 import { createWebHistory, createRouter } from 'vue-router'
-import Analytics from '@/views/Analytics.vue'
 import Quiz from '@/views/Quiz.vue'
-import Leaderboard from '@/views/Leaderboard.vue'
-import { useUserStore } from '@/stores/user'
-import { computed } from 'vue'
 import { authGuard } from '@/router/authGuard'
 
 const routes = [
@@ -11,13 +7,13 @@ const routes = [
     {
         path: '/analytics',
         name: 'Analytics',
-        component: Analytics,
+        component: () => import('@/views/Analytics.vue'),
         meta: { requiresAuth: true },
     },
     {
         path: '/leaderboard',
         name: 'Leaderboard',
-        component: Leaderboard,
+        component: () => import('@/views/Leaderboard.vue'),
     },
 ]
 
