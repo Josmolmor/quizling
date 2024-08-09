@@ -443,7 +443,7 @@ const startNewGame = () => {
             margin-bottom: 24px;
         }
 
-        label {
+        label:not(.analytics-check) {
             display: flex;
             justify-content: flex-start;
             flex-direction: column;
