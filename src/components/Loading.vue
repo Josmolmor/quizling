@@ -21,7 +21,7 @@
         height: 48px;
         border-width: 3px;
         border-style: solid solid dotted;
-        border-color: var(--main);
+        border-color: white;
         border-radius: 50%;
         display: inline-block;
         position: relative;
