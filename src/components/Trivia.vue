@@ -1,10 +1,9 @@
 <template>
     <div class="trivia">
         <div v-if="!gameStore.gameStarted" class="preferences-container">
-            <h2>Select Your Preferences</h2>
+            <h1>Play</h1>
             <label for="category">
                 <span>Category</span>
-                <!-- Dropdowns for category, difficulty, type, amount -->
                 <select
                     v-model="selectedCategory"
                     class="form-control"
@@ -159,7 +158,7 @@
                     labels: ['Right', 'Wrong'],
                     datasets: [
                         {
-                            backgroundColor: ['#1dd75e', '#d31649'],
+                            backgroundColor: ['#1dd75e', '#EC0640'],
                             data: [score, questions.length - score],
                             borderWidth: 0,
                         },
@@ -438,9 +437,8 @@ const startNewGame = () => {
         justify-content: center;
         text-align: center;
 
-        h2 {
-            margin-top: 0;
-            margin-bottom: 24px;
+        h1 {
+            margin: 0 auto;
         }
 
         label:not(.analytics-check) {
@@ -497,6 +495,10 @@ const startNewGame = () => {
                 font-size: 12px;
             }
         }
+    }
+
+    .analytics-check {
+        font-size: 14px;
     }
 }
 
@@ -595,6 +597,12 @@ button {
 
     p {
         margin: 32px auto;
+    }
+
+    canvas {
+        max-width: 320px;
+        object-fit: contain;
+        margin: 0 auto 32px;
     }
 }
 </style>

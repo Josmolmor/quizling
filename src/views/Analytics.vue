@@ -199,7 +199,7 @@ const chartCategoryData = computed(() => ({
                 xAxisKey: 'category',
                 yAxisKey: 'right',
             },
-            backgroundColor: '#d31649',
+            backgroundColor: '#EC0640',
             borderWidth: 1,
         },
     ],
@@ -280,9 +280,9 @@ const chartPerformanceData = computed(() => ({
                 xAxisKey: 'date',
                 yAxisKey: 'wrong',
             },
-            backgroundColor: '#d31649',
+            backgroundColor: '#EC0640',
             borderWidth: 1,
-            borderColor: '#d31649',
+            borderColor: '#EC0640',
         },
     ],
 }))
@@ -399,7 +399,7 @@ const chartDifficultyData = computed(() => ({
                 xAxisKey: 'difficulty',
                 yAxisKey: 'right',
             },
-            backgroundColor: '#d31649',
+            backgroundColor: '#EC0640',
             borderWidth: 1,
         },
     ],
@@ -474,7 +474,7 @@ const chartTypeData = computed(() => ({
                 xAxisKey: 'difficulty',
                 yAxisKey: 'right',
             },
-            backgroundColor: '#d31649',
+            backgroundColor: '#EC0640',
             borderWidth: 1,
         },
     ],
@@ -559,7 +559,7 @@ onMounted(() => {
             }
 
             &.wrong {
-                border: 1px solid #d31649;
+                border: 1px solid #ec0640;
             }
         }
 

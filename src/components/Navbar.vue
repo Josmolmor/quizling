@@ -157,6 +157,9 @@ nav {
     padding: 16px 0;
 
     a {
+        display: flex;
+        align-items: center;
+
         svg {
             transition: color 0.2s ease;
             color: var(--icon-color);
@@ -197,8 +200,21 @@ nav {
     }
 
     button {
-        padding: 6px;
-        font-size: 14px;
+        display: flex;
+        align-items: center;
+        border: none;
+        padding: 0;
+        background: none;
+        transition: color 0.25s;
+
+        &:hover {
+            background-color: transparent;
+            color: var(--main);
+        }
+
+        > svg {
+            height: 22px;
+        }
     }
 }
 </style>

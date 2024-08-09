@@ -51,5 +51,6 @@ onMounted(() => {
     margin-top: auto;
     padding: 32px;
     text-align: center;
+    font-size: 12px;
 }
 </style>
