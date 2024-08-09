@@ -13,7 +13,7 @@
     >
 </template>
 
-<script setup>
+<script lang="ts" setup>
 import { Toaster } from '@steveyuowo/vue-hot-toast'
 import '@steveyuowo/vue-hot-toast/vue-hot-toast.css'
 import Navbar from './components/Navbar.vue'

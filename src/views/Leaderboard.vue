@@ -28,7 +28,7 @@
 
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
-import { auth, collection, db } from '../services/firebase'
+import { auth, collection, db } from '@/services/firebase'
 import { getDocs, limit, orderBy, query } from 'firebase/firestore'
 import { format } from 'date-fns'
 import { useLoadingStore } from '@/stores/loading'
