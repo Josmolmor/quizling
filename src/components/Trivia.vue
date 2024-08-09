@@ -2,56 +2,84 @@
     <div class="trivia">
         <div v-if="!gameStore.gameStarted" class="preferences-container">
             <h2>Select Your Preferences</h2>
-            <!-- Dropdowns for category, difficulty, type, amount -->
-            <select v-model="selectedCategory" class="form-control">
-                <option value="any">Select a category</option>
-                <option value="9">General Knowledge</option>
-                <option value="10">Entertainment: Books</option>
-                <option value="11">Entertainment: Film</option>
-                <option value="12">Entertainment: Music</option>
-                <option value="13">
-                    Entertainment: Musicals &amp; Theatres
-                </option>
-                <option value="14">Entertainment: Television</option>
-                <option value="15">Entertainment: Video Games</option>
-                <option value="16">Entertainment: Board Games</option>
-                <option value="17">Science &amp; Nature</option>
-                <option value="18">Science: Computers</option>
-                <option value="19">Science: Mathematics</option>
-                <option value="20">Mythology</option>
-                <option value="21">Sports</option>
-                <option value="22">Geography</option>
-                <option value="23">History</option>
-                <option value="24">Politics</option>
-                <option value="25">Art</option>
-                <option value="26">Celebrities</option>
-                <option value="27">Animals</option>
-                <option value="28">Vehicles</option>
-                <option value="29">Entertainment: Comics</option>
-                <option value="30">Science: Gadgets</option>
-                <option value="31">
-                    Entertainment: Japanese Anime &amp; Manga
-                </option>
-                <option value="32">
-                    Entertainment: Cartoon &amp; Animations
-                </option>
-            </select>
-            <select v-model="selectedDifficulty" class="form-control">
-                <option value="any">Select a difficulty</option>
-                <option value="easy">Easy</option>
-                <option value="medium">Medium</option>
-                <option value="hard">Hard</option>
-            </select>
-            <select v-model="selectedType" class="form-control">
-                <option value="any">Select a type</option>
-                <option value="multiple">Multiple Choice</option>
-                <option value="boolean">True / False</option>
-            </select>
-            <select v-model="selectedAmount" class="form-control">
-                <option v-for="num in questionOptions" :key="num" :value="num">
-                    {{ num }} questions
-                </option>
-            </select>
+            <label for="category">
+                <span>Category</span>
+                <!-- Dropdowns for category, difficulty, type, amount -->
+                <select
+                    v-model="selectedCategory"
+                    class="form-control"
+                    id="category"
+                >
+                    <option value="any">Select a category</option>
+                    <option value="9">General Knowledge</option>
+                    <option value="10">Entertainment: Books</option>
+                    <option value="11">Entertainment: Film</option>
+                    <option value="12">Entertainment: Music</option>
+                    <option value="13">
+                        Entertainment: Musicals &amp; Theatres
+                    </option>
+                    <option value="14">Entertainment: Television</option>
+                    <option value="15">Entertainment: Video Games</option>
+                    <option value="16">Entertainment: Board Games</option>
+                    <option value="17">Science &amp; Nature</option>
+                    <option value="18">Science: Computers</option>
+                    <option value="19">Science: Mathematics</option>
+                    <option value="20">Mythology</option>
+                    <option value="21">Sports</option>
+                    <option value="22">Geography</option>
+                    <option value="23">History</option>
+                    <option value="24">Politics</option>
+                    <option value="25">Art</option>
+                    <option value="26">Celebrities</option>
+                    <option value="27">Animals</option>
+                    <option value="28">Vehicles</option>
+                    <option value="29">Entertainment: Comics</option>
+                    <option value="30">Science: Gadgets</option>
+                    <option value="31">
+                        Entertainment: Japanese Anime &amp; Manga
+                    </option>
+                    <option value="32">
+                        Entertainment: Cartoon &amp; Animations
+                    </option>
+                </select>
+            </label>
+            <label for="difficulty">
+                <span>Difficulty</span>
+                <select
+                    v-model="selectedDifficulty"
+                    class="form-control"
+                    id="difficulty"
+                >
+                    <option value="any">Select a difficulty</option>
+                    <option value="easy">Easy</option>
+                    <option value="medium">Medium</option>
+                    <option value="hard">Hard</option>
+                </select>
+            </label>
+            <label for="type">
+                <span>Type</span>
+                <select v-model="selectedType" class="form-control" id="type">
+                    <option value="any">Select a type</option>
+                    <option value="multiple">Multiple Choice</option>
+                    <option value="boolean">True / False</option>
+                </select>
+            </label>
+            <label for="amount">
+                <span>Number of questions</span>
+                <select
+                    v-model="selectedAmount"
+                    class="form-control"
+                    id="amount"
+                >
+                    <option
+                        v-for="num in questionOptions"
+                        :key="num"
+                        :value="num"
+                    >
+                        {{ num }} questions
+                    </option>
+                </select>
+            </label>
             <div class="button-container start">
                 <button @click="startGame(false)">Standard mode</button>
                 <div class="badge-button">
@@ -176,7 +204,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, InputHTMLAttributes } from 'vue'
+import { ref, computed } from 'vue'
 import { fetchTriviaQuestions, TriviaQuestion } from '@/services/trivia'
 import { htmlDecode } from '@/utils/htmlDecode'
 import {
@@ -415,11 +443,20 @@ const startNewGame = () => {
             margin-bottom: 24px;
         }
 
-        > * {
-            flex: 1;
+        label {
+            display: flex;
+            justify-content: flex-start;
+            flex-direction: column;
+
+            > span {
+                display: block;
+                margin-bottom: 4px;
+                text-align: left;
+            }
         }
 
         select {
+            flex: 1;
             border-radius: 8px;
             background: transparent;
             appearance: none;
@@ -541,9 +578,6 @@ button {
 .incorrect {
     background-color: var(--main-dark); /* Red for incorrect answers */
     color: white;
-}
-
-.default {
 }
 
 .feedback {

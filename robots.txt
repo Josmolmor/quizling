@@ -1,0 +1,15 @@
+User-agent: *
+Disallow: /admin/
+Disallow: /user/
+Disallow: /private/
+Disallow: /api/
+Disallow: /auth/
+Disallow: /login/
+Disallow: /register/
+Disallow: /analytics
+
+# Allow crawling of the main pages
+Allow: /
+
+# Sitemap location (if you have a sitemap)
+Sitemap: https://quizling.vercel.app//sitemap.xml

@@ -4,35 +4,7 @@
     </div>
 </template>
 
-<script setup lang="ts">
-import calcPropertyValue from '@/utils/calcPropertyValue'
-import { computed } from 'vue'
-
-const props = withDefaults(
-    defineProps<{
-        duration: string
-        show: boolean
-    }>(),
-    {
-        duration: '2.s',
-        show: false,
-    }
-)
-const spinnerStyle = {
-    background: 'var(--main)',
-    animationDuration: props.duration,
-}
-
-const divsStyles = computed(() => {
-    const divsStyles = []
-    for (let i = 3; i > 0; i--) {
-        divsStyles.push(
-            calcPropertyValue('animationDelay', props.duration, -0.1 * i)
-        )
-    }
-    return divsStyles
-})
-</script>
+<script setup lang="ts"></script>
 
 <style lang="scss" scoped>
 .loading-container {
@@ -47,8 +19,9 @@ const divsStyles = computed(() => {
     .loader {
         width: 48px;
         height: 48px;
-        border: 3px dotted #fff;
-        border-style: solid solid dotted dotted;
+        border-width: 3px;
+        border-style: solid solid dotted;
+        border-color: var(--main);
         border-radius: 50%;
         display: inline-block;
         position: relative;
@@ -64,8 +37,9 @@ const divsStyles = computed(() => {
         top: 0;
         bottom: 0;
         margin: auto;
-        border: 3px dotted var(--main);
+        border-width: 3px;
         border-style: solid solid dotted;
+        border-color: var(--main);
         width: 24px;
         height: 24px;
         border-radius: 50%;
