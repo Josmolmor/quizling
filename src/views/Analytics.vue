@@ -414,8 +414,7 @@ const fetchAnalytics = async () => {
     try {
         const q = query(
             collection(db, 'analytics'),
-            where('email', '==', userStore.userEmail),
-            orderBy('answeredAt', 'desc')
+            where('email', '==', userStore.userEmail)
         )
         const snapshot = await getDocs(q)
         analytics.value = snapshot.docs.map(
@@ -537,6 +536,8 @@ const parsedPerformanceData: Ref<OutputByPerformance[]> = computed(() => {
                   .sort((x, y) => {
                       return x.answeredAt - y.answeredAt
                   })
+
+    console.log(entries)
 
     const result: { [key: string]: OutputByPerformance } = {}
     entries.forEach((entry) => {
