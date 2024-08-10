@@ -429,7 +429,6 @@ const submitScore = async () => {
                 ...(gameStore.isTimedMode
                     ? {
                           timedScore: gameStore.pointsTotal,
-                          timedMode: gameStore.isTimedMode,
                       }
                     : {
                           normalScore: gameStore.pointsTotal,
@@ -445,7 +444,6 @@ const submitScore = async () => {
                     ...(gameStore.isTimedMode
                         ? {
                               timedScore: gameStore.pointsTotal,
-                              timedMode: gameStore.isTimedMode,
                           }
                         : {
                               normalScore: gameStore.pointsTotal,

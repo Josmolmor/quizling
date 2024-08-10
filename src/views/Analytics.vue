@@ -218,7 +218,11 @@
         <p class="loader" v-if="isLoading">Loading analytics...</p>
         <div class="charts-container" v-else>
             <div class="chart-content">
-                <h2>By Category</h2>
+                <div class="buttons-container">
+                    <h2>By Category</h2>
+                    <button>Standard</button>
+                    <button class="inactive">Timed</button>
+                </div>
                 <Bar
                     id="category-bar-chart"
                     :options="chartOptions"
@@ -240,7 +244,11 @@
                 </div>
             </div>
             <div class="chart-content">
-                <h2>By day</h2>
+                <div class="buttons-container">
+                    <h2>By day</h2>
+                    <button>Standard</button>
+                    <button class="inactive">Timed</button>
+                </div>
                 <Line
                     id="performance-bar-chart"
                     :options="chartOptions"
@@ -248,7 +256,11 @@
                 />
             </div>
             <div class="chart-content">
-                <h2>By Difficulty</h2>
+                <div class="buttons-container">
+                    <h2>By Difficulty</h2>
+                    <button>Standard</button>
+                    <button class="inactive">Timed</button>
+                </div>
                 <Bar
                     id="difficulty-bar-chart"
                     :options="chartOptions"
@@ -256,7 +268,11 @@
                 />
             </div>
             <div class="chart-content">
-                <h2>By Type</h2>
+                <div class="buttons-container">
+                    <h2>By Type</h2>
+                    <button>Standard</button>
+                    <button class="inactive">Timed</button>
+                </div>
                 <Bar
                     id="type-bar-chart"
                     :options="chartOptions"
@@ -748,12 +764,14 @@ onMounted(() => {
             background-color: #151515;
             padding: 16px;
             border-radius: 8px;
+            flex: 1;
 
             span {
                 display: flex;
                 gap: 8px;
                 align-items: center;
                 margin-bottom: 4px;
+                flex-wrap: wrap;
 
                 > svg {
                     height: 24px;
@@ -811,6 +829,9 @@ onMounted(() => {
             background-color: #151515;
             padding: 24px 32px;
             border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
 
             @media (min-width: 768px) {
                 width: 100%;
@@ -820,7 +841,29 @@ onMounted(() => {
             }
 
             h2 {
-                margin: 0 auto 24px;
+                flex-shrink: 0;
+                margin: 0 auto 0 0;
+            }
+
+            .buttons-container {
+                display: flex;
+                gap: 8px;
+                align-items: center;
+                flex-wrap: wrap;
+
+                button {
+                    flex-shrink: 0;
+                    padding: 4px 8px;
+
+                    &.inactive {
+                        border: 1px solid var(--main);
+                        background-color: transparent;
+
+                        &:hover:enabled {
+                            background-color: var(--main);
+                        }
+                    }
+                }
             }
         }
     }
