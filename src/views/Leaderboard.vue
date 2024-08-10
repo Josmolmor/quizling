@@ -3,8 +3,8 @@
         <h1>Leaderboard</h1>
         <div class="leaderboards-layout">
             <div>
-                <h3>Normal</h3>
-                <p v-if="isLoading">Loading normal leaderboard</p>
+                <h3>Standard</h3>
+                <p v-if="isLoading">Loading standard leaderboard</p>
                 <ul v-else-if="leaderboard.length">
                     <li
                         v-for="(user, index) in leaderboard"
