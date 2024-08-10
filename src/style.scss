@@ -1,6 +1,7 @@
 :root {
     --main: #EC0640;
     --main-dark: #A8062FFF;
+    --accent: #ffeb00;
     --dark: #212121;
     --darker: #121212;
     --icon-color: white;
@@ -77,4 +78,9 @@ a {
     &:hover {
         color: var(--main-dark);
     }
+}
+
+.VueHotToast__toast-container > .VueHotToast__toast {
+    background: var(--dark);
+    color: white;
 }

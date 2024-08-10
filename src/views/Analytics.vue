@@ -3,16 +3,216 @@
         <h1>Analytics</h1>
         <div class="summary">
             <div class="total">
-                <span>Total answers</span>
+                <span>
+                    <svg
+                        width="24"
+                        height="24"
+                        xmlns="http://www.w3.org/2000/svg"
+                        xmlns:svg="http://www.w3.org/2000/svg"
+                    >
+                        <g class="layer">
+                            <title>Layer 1</title>
+                            <g id="SVGRepo_bgCarrier" stroke-width="0" />
+                            <g
+                                id="SVGRepo_tracerCarrier"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                            />
+                            <g id="SVGRepo_iconCarrier">
+                                <path
+                                    d="m20,14l-17,0"
+                                    id="svg_1"
+                                    stroke="currentColor"
+                                    stroke-linecap="round"
+                                    stroke-width="1.5"
+                                />
+                                <path
+                                    d="m19.98,18l-16.98,0"
+                                    id="svg_2"
+                                    stroke="currentColor"
+                                    stroke-linecap="round"
+                                    stroke-width="1.5"
+                                    transform="matrix(1 0 0 1 0 0)"
+                                />
+                                <path
+                                    d="m3,6l10.5,0m6.5,0l-2.25,0"
+                                    id="svg_4"
+                                    stroke="currentColor"
+                                    stroke-linecap="round"
+                                    stroke-width="1.5"
+                                />
+                                <path
+                                    d="m20,10l-10.5,0m-6.5,0l2.25,0"
+                                    id="svg_5"
+                                    stroke="currentColor"
+                                    stroke-linecap="round"
+                                    stroke-width="1.5"
+                                />
+                            </g>
+                        </g>
+                    </svg>
+                    Total answers</span
+                >
                 <h2>{{ totalAnswers }}</h2>
             </div>
             <div class="right">
-                <span>Right answers</span>
-                <h2>{{ totalRightAnswers }}</h2>
+                <span>
+                    <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                    >
+                        <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                        <g
+                            id="SVGRepo_tracerCarrier"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                        ></g>
+                        <g id="SVGRepo_iconCarrier">
+                            <path
+                                d="M14 16L16.1 18.5L20 13.5"
+                                stroke="#ffffff"
+                                stroke-width="1.5"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                            ></path>
+                            <path
+                                d="M10 14H3"
+                                stroke="#ffffff"
+                                stroke-width="1.5"
+                                stroke-linecap="round"
+                            ></path>
+                            <path
+                                d="M10 18H3"
+                                stroke="#ffffff"
+                                stroke-width="1.5"
+                                stroke-linecap="round"
+                            ></path>
+                            <path
+                                d="M3 6L13.5 6M20 6L17.75 6"
+                                stroke="#ffffff"
+                                stroke-width="1.5"
+                                stroke-linecap="round"
+                            ></path>
+                            <path
+                                d="M20 10L9.5 10M3 10H5.25"
+                                stroke="#ffffff"
+                                stroke-width="1.5"
+                                stroke-linecap="round"
+                            ></path>
+                        </g>
+                    </svg>
+                    Right answers
+                </span>
+                <h2>
+                    {{ totalRightAnswers }}
+                </h2>
             </div>
             <div class="wrong">
-                <span>Wrong answers</span>
-                <h2>{{ totalAnswers - totalRightAnswers }}</h2>
+                <span>
+                    <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                    >
+                        <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                        <g
+                            id="SVGRepo_tracerCarrier"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                        ></g>
+                        <g id="SVGRepo_iconCarrier">
+                            <path
+                                d="M15 18.5L20 13.5M20 18.5L15 13.5"
+                                stroke="currentColor"
+                                stroke-width="1.5"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                            ></path>
+                            <path
+                                d="M11 14L3 14"
+                                stroke="currentColor"
+                                stroke-width="1.5"
+                                stroke-linecap="round"
+                            ></path>
+                            <path
+                                d="M11 18H3"
+                                stroke="currentColor"
+                                stroke-width="1.5"
+                                stroke-linecap="round"
+                            ></path>
+                            <path
+                                d="M3 6L13.5 6M20 6L17.75 6"
+                                stroke="currentColor"
+                                stroke-width="1.5"
+                                stroke-linecap="round"
+                            ></path>
+                            <path
+                                d="M20 10L9.5 10M3 10H5.25"
+                                stroke="currentColor"
+                                stroke-width="1.5"
+                                stroke-linecap="round"
+                            ></path>
+                        </g>
+                    </svg>
+                    Wrong answers
+                </span>
+                <h2>
+                    <span>{{ totalAnswers - totalRightAnswers }}</span>
+                </h2>
+            </div>
+            <div v-if="analyticsStore.highestStreak" class="streak">
+                <span>
+                    <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                    >
+                        <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                        <g
+                            id="SVGRepo_tracerCarrier"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                        ></g>
+                        <g id="SVGRepo_iconCarrier">
+                            <path
+                                d="M11 14L3 14"
+                                stroke="currentColor"
+                                stroke-width="1.5"
+                                stroke-linecap="round"
+                            ></path>
+                            <path
+                                d="M11 18H3"
+                                stroke="currentColor"
+                                stroke-width="1.5"
+                                stroke-linecap="round"
+                            ></path>
+                            <path
+                                d="M20 16.5L17.5 14M17.5 14L15 16.5M17.5 14V20"
+                                stroke="currentColor"
+                                stroke-width="1.5"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                            ></path>
+                            <path
+                                d="M3 6L13.5 6M20 6L17.75 6"
+                                stroke="currentColor"
+                                stroke-width="1.5"
+                                stroke-linecap="round"
+                            ></path>
+                            <path
+                                d="M20 10L9.5 10M3 10H5.25"
+                                stroke="currentColor"
+                                stroke-width="1.5"
+                                stroke-linecap="round"
+                            ></path>
+                        </g>
+                    </svg>
+                    Highest streak</span
+                >
+                <h2>
+                    {{ analyticsStore.highestStreak }}
+                </h2>
             </div>
         </div>
         <p class="loader" v-if="isLoading">Loading analytics...</p>
@@ -89,6 +289,7 @@ import {
     BarController,
 } from 'chart.js'
 import { htmlDecode } from '@/utils/htmlDecode'
+import { useAnalyticsStore } from '@/stores/analytics'
 
 ChartJS.register(
     Title,
@@ -105,8 +306,9 @@ ChartJS.register(
 
 const loadingStore = useLoadingStore()
 const isLoading = computed(() => loadingStore.loading)
-
 const userStore = useUserStore()
+const analyticsStore = useAnalyticsStore()
+
 const analytics = ref<any[]>([])
 const totalAnswers = computed(() => analytics.value.length)
 const totalRightAnswers = computed(
@@ -513,6 +715,7 @@ const chartOptions: Ref<ChartOptions> = computed(() => ({
 
 onMounted(() => {
     fetchAnalytics()
+    analyticsStore.fetchHighestStreak()
     auth.onAuthStateChanged((currentUser) => {
         fetchAnalytics()
     })
@@ -546,6 +749,17 @@ onMounted(() => {
             padding: 16px;
             border-radius: 8px;
 
+            span {
+                display: flex;
+                gap: 8px;
+                align-items: center;
+                margin-bottom: 4px;
+
+                > svg {
+                    height: 24px;
+                }
+            }
+
             h2 {
                 margin: 0;
             }
@@ -560,6 +774,10 @@ onMounted(() => {
 
             &.wrong {
                 border: 1px solid #ec0640;
+            }
+
+            &.streak {
+                border: 1px solid var(--accent);
             }
         }
 

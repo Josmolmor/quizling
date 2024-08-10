@@ -23,10 +23,12 @@ import { useUserStore } from './stores/user'
 import { useAnalyticsStore } from './stores/analytics'
 import Loading from '@/components/Loading.vue'
 import { useLoadingStore } from './stores/loading'
+import { useGameStore } from '@/stores/game'
 
 const userStore = useUserStore()
 const analyticsStore = useAnalyticsStore()
 const loadingStore = useLoadingStore()
+const gameStore = useGameStore()
 
 onMounted(() => {
     auth.onAuthStateChanged((currentUser) => {
@@ -37,7 +39,10 @@ onMounted(() => {
             analyticsStore.setAnalyticsTracking(false)
         } else {
             if (currentUser?.email) {
-                analyticsStore.fetchPersonalBest(currentUser.email)
+                analyticsStore.fetchPersonalBest(
+                    currentUser.email,
+                    gameStore.isTimedMode
+                )
                 analyticsStore.setAnalyticsTracking(true)
             }
         }

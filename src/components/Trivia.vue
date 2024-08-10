@@ -103,8 +103,15 @@
             v-else-if="questions.length && !isFinished"
             class="question-container"
         >
+            <div v-if="gameStore.isOnARoll" class="bolt-container">
+                <BoltIcon class="bolt-icon" />
+                <span
+                    ><strong>You're on a roll!</strong> From now on, each
+                    correct answer is worth double points</span
+                >
+            </div>
             <Countdown
-                v-if="isTimedMode"
+                v-if="gameStore.isTimedMode"
                 :initial-time="selectedAmount * 5"
                 :pending-answers="
                     questions.length + 1 - (currentQuestionIndex + 1)
@@ -151,8 +158,22 @@
             <h2>Loading</h2>
         </div>
         <div class="outcome" v-if="isFinished">
-            <h2>Your score: {{ score }}/{{ questions.length }}</h2>
-            <p v-if="isTimedMode && timeRanOut">You ran out of time</p>
+            <h2>Your score: {{ gameStore.pointsTotal }}</h2>
+            <p>
+                Answered a total of
+                <strong>{{ questions.length }} questions</strong>
+                <br />
+                <span v-if="gameStore.maxStreak">
+                    Achieved a streak of
+                    <strong
+                        >{{ gameStore.maxStreak }} correct answers in a
+                        row</strong
+                    ></span
+                >
+            </p>
+            <p v-if="gameStore.isTimedMode && timeRanOut">
+                You ran out of time
+            </p>
             <Pie
                 :data="{
                     labels: ['Right', 'Wrong'],
@@ -181,7 +202,7 @@
                     >Your best score before this attempt was
                     <strong>{{ analyticsStore.personalBest }}</strong></span
                 ><br />
-                <span v-if="score > analyticsStore.personalBest"
+                <span v-if="gameStore.pointsTotal > analyticsStore.personalBest"
                     >Congrats! you got a new personal high score</span
                 >
             </p>
@@ -189,9 +210,10 @@
                 <button @click="startNewGame">Start New Game</button>
                 <button
                     v-if="
-                        score > 0 &&
+                        gameStore.pointsTotal > 0 &&
                         ((store.userEmail &&
-                            score > analyticsStore.personalBest) ||
+                            gameStore.pointsTotal >
+                                analyticsStore.personalBest) ||
                             !store.userEmail)
                     "
                     @click="submitScore"
@@ -225,6 +247,7 @@ import { toast } from '@steveyuowo/vue-hot-toast'
 import StopwatchIcon from '@/components/StopwatchIcon.vue'
 import Countdown from '@/components/Countdown.vue'
 import { useGameStore } from '@/stores/game'
+import BoltIcon from '@/components/BoltIcon.vue'
 
 ChartJS.register(ArcElement, Tooltip, Legend)
 
@@ -262,8 +285,6 @@ const fetchQuestions = async () => {
             type: selectedType.value,
             amount: selectedAmount.value,
         })
-
-        console.log('fetch =>', questions.value)
     } catch (error) {
         console.error('Failed to fetch questions', error)
     }
@@ -275,9 +296,8 @@ const analyticsTrackingToggle = async (e: Event) => {
     )
 }
 
-const isTimedMode = ref(false)
 const startGame = async (timed: boolean) => {
-    isTimedMode.value = timed
+    gameStore.setTimedMode(timed)
     await fetchQuestions()
     gameStore.setGameStarted(true)
 }
@@ -334,6 +354,7 @@ const trackAnswerAnalytic = async (correct: boolean) => {
     const type = currentQuestion.value.type
     const outcome = correct ? 1 : 0
     const answeredAt = timestamp
+    const streak = gameStore.streakMode
 
     await addDoc(collection(db, 'analytics'), {
         email: store.userEmail,
@@ -343,6 +364,8 @@ const trackAnswerAnalytic = async (correct: boolean) => {
         type,
         outcome,
         answeredAt,
+        ...(gameStore.isOnARoll ? { streak } : {}),
+        ...(gameStore.isTimedMode ? { timedMode: gameStore.isTimedMode } : {}),
     })
 }
 
@@ -361,7 +384,10 @@ const submitAnswer = (answer: string) => {
 
     if (correct) {
         score.value++
+        gameStore.setPointsTotal(1)
+        gameStore.setStreakMode()
     } else {
+        gameStore.setStreakMode(true)
         correctAnswer.value = currentQuestion.value?.correct_answer || ''
     }
 
@@ -390,33 +416,58 @@ const submitScore = async () => {
         // Check if the document already exists
         const docSnapshot = await getDoc(userDocRef)
 
-        if (docSnapshot.exists() && score.value > docSnapshot.data().score) {
+        if (
+            docSnapshot.exists() &&
+            score.value >
+                (gameStore.isTimedMode
+                    ? docSnapshot.data().timedScore
+                    : docSnapshot.data().normalScore)
+        ) {
             // Update the existing entry
             await updateDoc(userDocRef, {
-                score: score.value,
                 lastUpdated: new Date(), // Add a timestamp for tracking updates
+                ...(gameStore.isTimedMode
+                    ? {
+                          timedScore: gameStore.pointsTotal,
+                          timedMode: gameStore.isTimedMode,
+                      }
+                    : {
+                          normalScore: gameStore.pointsTotal,
+                      }),
             })
         } else {
             // Add a new entry
-            await setDoc(userDocRef, {
-                name: store.displayName || `anonymous${Date.now()}`,
-                score: score.value,
-                createdAt: new Date(), // Add a timestamp for tracking creation
-            })
+            await setDoc(
+                userDocRef,
+                {
+                    name: store.displayName || `anonymous${Date.now()}`,
+                    createdAt: new Date(), // Add a timestamp for tracking creation
+                    ...(gameStore.isTimedMode
+                        ? {
+                              timedScore: gameStore.pointsTotal,
+                              timedMode: gameStore.isTimedMode,
+                          }
+                        : {
+                              normalScore: gameStore.pointsTotal,
+                          }),
+                },
+                { merge: true }
+            )
         }
-    } catch (error) {
-        console.error('Failed to submit score', error)
-        alert(
-            'There was an error submitting your score. Please try again later.'
-        )
-    } finally {
         toast.success('Score updated!')
         startNewGame()
+    } catch (error) {
+        console.error('Failed to submit score', error)
+        toast.error(
+            'There was an error submitting your score. Please try again later.'
+        )
     }
 }
 
 const startNewGame = () => {
     gameStore.setGameStarted(false)
+    gameStore.setStreakMode(true)
+    gameStore.setPointsTotal(0)
     fetchQuestions()
 }
 </script>
@@ -488,7 +539,7 @@ const startNewGame = () => {
                 position: absolute;
                 right: -24px;
                 top: -4px;
-                background: #ffeb00;
+                background: var(--accent);
                 text-align: center;
                 border-radius: 24px;
                 color: black;
@@ -504,6 +555,32 @@ const startNewGame = () => {
 }
 
 .question-container {
+    position: relative;
+
+    .bolt-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        max-width: 360px;
+        width: 100%;
+        gap: 16px;
+        position: absolute;
+        top: -120px;
+        left: 50%;
+        transform: translateX(-50%);
+        border: 1px solid rgb(255 235 0);
+        border-radius: 8px;
+        padding: 8px;
+        background-color: rgba(255, 235, 0, 0.025);
+
+        .bolt-icon {
+            flex-shrink: 0;
+            height: 48px;
+            width: 48px;
+            color: var(--accent);
+        }
+    }
+
     .extra-info {
         display: flex;
         align-items: baseline;
@@ -595,15 +672,22 @@ button {
 
 .outcome {
     text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+
+    h2 {
+        margin: 0;
+    }
 
     p {
-        margin: 32px auto;
+        margin: 0 auto;
     }
 
     canvas {
         max-width: 320px;
         object-fit: contain;
-        margin: 0 auto 32px;
+        margin: 0 auto;
     }
 }
 </style>

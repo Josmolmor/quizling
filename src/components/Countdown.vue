@@ -101,7 +101,7 @@ watch(initialTime, (newValue) => {
     }
 })
 
-const shouldHurryUp = computed(() => props.pendingAnswers * 5 > time.value)
+const shouldHurryUp = computed(() => props.pendingAnswers * 5 - 1 > time.value)
 </script>
 
 <style lang="scss" scoped>
@@ -129,7 +129,8 @@ const shouldHurryUp = computed(() => props.pendingAnswers * 5 > time.value)
 
     &.hurry-up {
         color: var(--main);
-        animation: tilt-shaking 0.25s infinite;
+        animation: tilt-shaking 0.25s;
+        animation-iteration-count: 1;
     }
 }
 
