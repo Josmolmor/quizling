@@ -1,6 +1,8 @@
 <div style="display: flex; align-items: baseline; gap: 8px;">
-    <h1><img alt="quizling-logo" src="public/certificate-check-svgrepo-com.svg" height="24" />Quizling</h1>
+    <h1><img alt="quizling-logo" src="public/certificate-check-svgrepo-com.svg" height="24" /> Quizling</h1>
 </div>
+
+<a href="https://quizling.vercel.app/" target="_blank">Check it out! ↗</a>
 
 <p>Trivia-like app using open trivia database API with leaderboard and user analytics</p>
 
