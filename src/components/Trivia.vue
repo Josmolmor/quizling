@@ -226,7 +226,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { fetchTriviaQuestions, TriviaQuestion } from '@/services/trivia'
 import { htmlDecode } from '@/utils/htmlDecode'
 import {
@@ -248,6 +248,7 @@ import StopwatchIcon from '@/components/StopwatchIcon.vue'
 import Countdown from '@/components/Countdown.vue'
 import { useGameStore } from '@/stores/game'
 import BoltIcon from '@/components/BoltIcon.vue'
+import generateRandomName from '@/utils/generateCombinations'
 
 ChartJS.register(ArcElement, Tooltip, Legend)
 
@@ -263,6 +264,7 @@ const selectedAmount = ref(5)
 const selectedAnswer = ref<string | null>(null)
 const correctAnswer = ref<string | null>(null)
 const feedbackVisible = ref(false)
+const randomAnonymousName = ref('')
 
 const store = useUserStore()
 const analyticsStore = useAnalyticsStore()
@@ -407,7 +409,7 @@ const submitAnswer = (answer: string) => {
 const submitScore = async () => {
     const userEmail = store.userEmail.replace(/\./g, '_') // Use email as doc ID, replacing '.' to avoid Firestore issues
     const userId =
-        userEmail || auth.currentUser?.uid || `anonymous${Date.now()}`
+        userEmail || auth.currentUser?.uid || randomAnonymousName.value
 
     try {
         // const userDocRef = doc(db, 'leaderboard', userId);
@@ -439,7 +441,7 @@ const submitScore = async () => {
             await setDoc(
                 userDocRef,
                 {
-                    name: store.displayName || `anonymous${Date.now()}`,
+                    name: store.displayName || randomAnonymousName.value,
                     createdAt: new Date(), // Add a timestamp for tracking creation
                     ...(gameStore.isTimedMode
                         ? {
@@ -452,7 +454,16 @@ const submitScore = async () => {
                 { merge: true }
             )
         }
-        toast.success('Score updated!')
+        randomAnonymousName.value
+            ? toast.success(
+                  `Score submitted under "${randomAnonymousName.value}"`,
+                  {
+                      duration: 2500,
+                  }
+              )
+            : toast.success('Score submitted!', {
+                  duration: 2500,
+              })
         startNewGame()
     } catch (error) {
         console.error('Failed to submit score', error)
@@ -468,6 +479,10 @@ const startNewGame = () => {
     gameStore.setPointsTotal(0)
     fetchQuestions()
 }
+
+onMounted(() => {
+    randomAnonymousName.value = generateRandomName()
+})
 </script>
 
 <style scoped lang="scss">

@@ -143,7 +143,7 @@ onMounted(() => {
     .leaderboards-layout {
         display: flex;
         justify-content: space-between;
-        gap: 16px;
+        gap: 48px;
         flex-wrap: wrap;
 
         h3 {
