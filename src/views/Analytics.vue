@@ -220,8 +220,22 @@
             <div class="chart-content">
                 <div class="buttons-container">
                     <h2>By Category</h2>
-                    <button>Standard</button>
-                    <button class="inactive">Timed</button>
+                    <button
+                        :class="{
+                            inactive: categoryMode === 'timed',
+                        }"
+                        @click="setCategoryMode('standard')"
+                    >
+                        Standard
+                    </button>
+                    <button
+                        :class="{
+                            inactive: categoryMode === 'standard',
+                        }"
+                        @click="setCategoryMode('timed')"
+                    >
+                        Timed
+                    </button>
                 </div>
                 <Bar
                     id="category-bar-chart"
@@ -246,8 +260,22 @@
             <div class="chart-content">
                 <div class="buttons-container">
                     <h2>By day</h2>
-                    <button>Standard</button>
-                    <button class="inactive">Timed</button>
+                    <button
+                        :class="{
+                            inactive: dayMode === 'timed',
+                        }"
+                        @click="setDayMode('standard')"
+                    >
+                        Standard
+                    </button>
+                    <button
+                        :class="{
+                            inactive: dayMode === 'standard',
+                        }"
+                        @click="setDayMode('timed')"
+                    >
+                        Timed
+                    </button>
                 </div>
                 <Line
                     id="performance-bar-chart"
@@ -258,8 +286,22 @@
             <div class="chart-content">
                 <div class="buttons-container">
                     <h2>By Difficulty</h2>
-                    <button>Standard</button>
-                    <button class="inactive">Timed</button>
+                    <button
+                        :class="{
+                            inactive: difficultyMode === 'timed',
+                        }"
+                        @click="setDifficultyMode('standard')"
+                    >
+                        Standard
+                    </button>
+                    <button
+                        :class="{
+                            inactive: difficultyMode === 'standard',
+                        }"
+                        @click="setDifficultyMode('timed')"
+                    >
+                        Timed
+                    </button>
                 </div>
                 <Bar
                     id="difficulty-bar-chart"
@@ -270,8 +312,22 @@
             <div class="chart-content">
                 <div class="buttons-container">
                     <h2>By Type</h2>
-                    <button>Standard</button>
-                    <button class="inactive">Timed</button>
+                    <button
+                        :class="{
+                            inactive: typeMode === 'timed',
+                        }"
+                        @click="setTypeMode('standard')"
+                    >
+                        Standard
+                    </button>
+                    <button
+                        :class="{
+                            inactive: typeMode === 'standard',
+                        }"
+                        @click="setTypeMode('timed')"
+                    >
+                        Timed
+                    </button>
                 </div>
                 <Bar
                     id="type-bar-chart"
@@ -320,6 +376,28 @@ ChartJS.register(
     BarController
 )
 
+type StatMode = 'standard' | 'timed'
+
+const categoryMode = ref<StatMode>('standard')
+const setCategoryMode = (value: StatMode) => {
+    categoryMode.value = value
+}
+
+const dayMode = ref<StatMode>('standard')
+const setDayMode = (value: StatMode) => {
+    dayMode.value = value
+}
+
+const difficultyMode = ref<StatMode>('standard')
+const setDifficultyMode = (value: StatMode) => {
+    difficultyMode.value = value
+}
+
+const typeMode = ref<StatMode>('standard')
+const setTypeMode = (value: StatMode) => {
+    typeMode.value = value
+}
+
 const loadingStore = useLoadingStore()
 const isLoading = computed(() => loadingStore.loading)
 const userStore = useUserStore()
@@ -358,10 +436,19 @@ type OutputByCategory = {
 }
 
 const parsedCategoryData: Ref<OutputByCategory[]> = computed(() => {
-    const data = analytics.value.map((a) => ({
-        category: a.category,
-        outcome: a.outcome,
-    }))
+    const data =
+        categoryMode.value === 'timed'
+            ? analytics.value
+                  .filter((v) => v.timedMode)
+                  .map((a) => ({
+                      category: a.category,
+                      outcome: a.outcome,
+                  }))
+            : analytics.value.map((a) => ({
+                  category: a.category,
+                  outcome: a.outcome,
+              }))
+
     const result: {
         [key: string]: { total: number; right: number; wrong: number }
     } = {}
@@ -431,14 +518,25 @@ type OutputByPerformance = {
 }
 
 const parsedPerformanceData: Ref<OutputByPerformance[]> = computed(() => {
-    const entries = analytics.value
-        .map((a) => ({
-            answeredAt: a.answeredAt,
-            outcome: a.outcome,
-        }))
-        .sort((x, y) => {
-            return x.answeredAt - y.answeredAt
-        })
+    const entries =
+        dayMode.value === 'standard'
+            ? analytics.value
+                  .map((a) => ({
+                      answeredAt: a.answeredAt,
+                      outcome: a.outcome,
+                  }))
+                  .sort((x, y) => {
+                      return x.answeredAt - y.answeredAt
+                  })
+            : analytics.value
+                  .filter((v) => v.timedMode)
+                  .map((a) => ({
+                      answeredAt: a.answeredAt,
+                      outcome: a.outcome,
+                  }))
+                  .sort((x, y) => {
+                      return x.answeredAt - y.answeredAt
+                  })
 
     const result: { [key: string]: OutputByPerformance } = {}
     entries.forEach((entry) => {
@@ -556,10 +654,18 @@ type OutputByDifficulty = {
 }
 
 const parsedDifficultyData: Ref<OutputByDifficulty[]> = computed(() => {
-    const data = analytics.value.map((a) => ({
-        difficulty: a.difficulty,
-        outcome: a.outcome,
-    }))
+    const data =
+        difficultyMode.value === 'standard'
+            ? analytics.value.map((a) => ({
+                  difficulty: a.difficulty,
+                  outcome: a.outcome,
+              }))
+            : analytics.value
+                  .filter((a) => a.timedMode)
+                  .map((a) => ({
+                      difficulty: a.difficulty,
+                      outcome: a.outcome,
+                  }))
     const result: {
         [key: string]: { total: number; right: number; wrong: number }
     } = {}
@@ -631,10 +737,19 @@ type OutputByType = {
 }
 
 const parsedTypeData: Ref<OutputByType[]> = computed(() => {
-    const data = analytics.value.map((a) => ({
-        type: a.type,
-        outcome: a.outcome,
-    }))
+    const data =
+        typeMode.value === 'standard'
+            ? analytics.value.map((a) => ({
+                  type: a.type,
+                  outcome: a.outcome,
+              }))
+            : analytics.value
+                  .filter((a) => a.timedMode)
+                  .map((a) => ({
+                      type: a.type,
+                      outcome: a.outcome,
+                  }))
+
     const result: {
         [key: string]: { total: number; right: number; wrong: number }
     } = {}
