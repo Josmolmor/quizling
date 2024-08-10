@@ -118,7 +118,7 @@
                 "
                 @on-finished="countdownFinished"
             />
-            <h2>
+            <h2 :key="decodedQuestion">
                 <span class="current-index"
                     >#{{ currentQuestionIndex + 1 }}/{{
                         questions.length
