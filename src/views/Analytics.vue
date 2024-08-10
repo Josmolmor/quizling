@@ -874,6 +874,10 @@ onMounted(() => {
         flex-wrap: wrap;
         justify-content: center;
 
+        @media (min-width: 768px) {
+            gap: 16px;
+        }
+
         > div {
             background-color: #151515;
             padding: 16px;
@@ -932,8 +936,10 @@ onMounted(() => {
 
     .charts-container {
         padding-bottom: 64px;
-        display: block;
+        display: flex;
         width: 100%;
+        gap: 16px;
+        flex-direction: column;
 
         @media (min-width: 768px) {
             min-width: 560px;
