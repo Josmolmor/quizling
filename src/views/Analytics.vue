@@ -878,7 +878,11 @@ onMounted(() => {
             background-color: #151515;
             padding: 16px;
             border-radius: 8px;
-            flex: 1;
+            flex: 33%;
+
+            @media (min-width: 768px) {
+                flex: 1;
+            }
 
             span {
                 display: flex;
