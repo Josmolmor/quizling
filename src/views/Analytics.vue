@@ -537,8 +537,6 @@ const parsedPerformanceData: Ref<OutputByPerformance[]> = computed(() => {
                       return x.answeredAt - y.answeredAt
                   })
 
-    console.log(entries)
-
     const result: { [key: string]: OutputByPerformance } = {}
     entries.forEach((entry) => {
         // Convert timestamp to a readable date (YYYY-MM-DD)
