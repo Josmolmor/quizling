@@ -95,7 +95,7 @@
                 </svg>
             </button>
         </div>
-        <button v-else-if="!gameStore.gameStarted" @click="signInWithGoogle">
+        <button class="login-button" v-else-if="!gameStore.gameStarted" @click="signInWithGoogle">
             Log in with Google
         </button>
     </nav>
@@ -217,6 +217,11 @@ nav {
         > svg {
             height: 24px;
         }
+    }
+
+    .login-button {
+        padding: 6px;
+        cursor: pointer;
     }
 }
 </style>
